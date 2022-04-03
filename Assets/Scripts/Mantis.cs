@@ -20,7 +20,7 @@ public class Mantis : MonoBehaviour
 
     [Header("Player")]
     public float flightZoneRadius;
-    public float spookedMoveSpeed =2;
+    public float spookedMoveSpeed = 2;
     float spookStateDuration = 10;
     float spookTime;
 
@@ -30,11 +30,21 @@ public class Mantis : MonoBehaviour
     const float TURN_INTERVAL = 1;
 
     [Header("Animations")]
+    public GameObject emote;
     Animator anim;
 
     Transform player;
 
-    public bool IsSpookedByPlayer { get => Vector2.Distance(transform.position, player.position) < flightZoneRadius; }
+    public bool IsSpookedByPlayer
+    {
+        get
+        {
+            if (PlayerEnergy.Instance.HasEnergy)
+                return Vector2.Distance(transform.position, player.position) < flightZoneRadius;
+            else
+                return false;
+        }
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -48,6 +58,9 @@ public class Mantis : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (GameManager.GameIsOver)
+            return;
+
         if (target == null)
         {
             target = SelectTarget();
@@ -60,14 +73,14 @@ public class Mantis : MonoBehaviour
         float targetMovement = 0;
 
         //Remove spooked state
-        if (state==State.Spooked && Time.time > spookTime + spookStateDuration)
+        if (state == State.Spooked && Time.time > spookTime + spookStateDuration)
             state = State.MovingToTarget;
 
         //Find the state
         if (IsSpookedByPlayer)
             Spook();
         //Look for attack
-        if (state!=State.Spooked && Mathf.Abs(toTarget.x) < triggerAttackDistance)
+        if (state != State.Spooked && Mathf.Abs(toTarget.x) < triggerAttackDistance && PlayArea.IsInPlayArea(transform.position.x))
             Attack();
 
         switch (state)
@@ -79,7 +92,7 @@ public class Mantis : MonoBehaviour
 
             case State.Spooked:
                 float toSpawnPos = spawnPosition.x - transform.position.x;
-                targetMovement = Mathf.Sign(playerToMantis.x) * Mathf.Clamp(InsectBoid.Inv(playerToMantis.magnitude, 2), 0,10) + Mathf.Sign(toSpawnPos) * spookedMoveSpeed;
+                targetMovement = Mathf.Sign(playerToMantis.x) * Mathf.Clamp(InsectBoid.Inv(playerToMantis.magnitude, 2), 0, 10) + Mathf.Sign(toSpawnPos) * spookedMoveSpeed;
                 break;
 
             case State.Attacking:
@@ -100,6 +113,14 @@ public class Mantis : MonoBehaviour
             return;
 
         state = State.Spooked;
+        emote.SetActive(true);
+        Invoke("HideEmote", 0.3f);
+        SoundManager.PlaySound(3);
+    }
+
+    void HideEmote()
+    {
+        emote.SetActive(false);
     }
 
     public void Attack()
@@ -116,7 +137,7 @@ public class Mantis : MonoBehaviour
     {
         float t = 0;
 
-        while(t<1)
+        while (t < 1)
         {
             t += Time.deltaTime / DifficultyManager.MantisAttackPreparation;
 
@@ -130,8 +151,11 @@ public class Mantis : MonoBehaviour
         yield return new WaitForSeconds(0.05f);
         ParticleSystem particles = Instantiate(attackParticles, null);
         particles.transform.position = transform.position;
+        if (target == null)
+            yield break;
         particles.transform.LookAt(target.transform.position);
         particles.Play();
+        SoundManager.PlaySound(0);
         Destroy(particles.gameObject, 1.5f);
         yield return new WaitForSeconds(0.05f);
         Destroy(target.gameObject);
@@ -170,8 +194,8 @@ public class Mantis : MonoBehaviour
             Gizmos.color = Color.red;
         else
             Gizmos.color = Color.green;
-        if(target!=null)
-            Gizmos.DrawLine(target.transform.position,transform.position);
+        if (target != null)
+            Gizmos.DrawLine(target.transform.position, transform.position);
 
         Gizmos.color = Color.blue;
         Gizmos.DrawWireSphere(transform.position, flightZoneRadius);

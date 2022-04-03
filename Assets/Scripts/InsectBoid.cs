@@ -59,6 +59,9 @@ public class InsectBoid : MonoBehaviour
     {
         if(Application.isPlaying && gameObject.scene.isLoaded)
             Destroy(Instantiate(bloodFX, transform.position, Quaternion.identity, null),2);
+
+        if (GameManager.Instance != null)
+            GameManager.Instance.OnMoskitoKill();
     }
 
     float P(float x)
@@ -68,6 +71,8 @@ public class InsectBoid : MonoBehaviour
 
     float CombineWeight(float mult1, float mult2, float x)
     {
+        if (!PlayerEnergy.Instance.HasEnergy)
+            return mult1;
         return mult1 * (1 + P(x) * mult2);
     }
 
@@ -182,7 +187,8 @@ public class InsectBoid : MonoBehaviour
         Vector3 v = Vector3.zero;
         v += RuleCohesion() * CombineWeight(weightCohesionBase, weightCohesionPlayerNear, distanceToPlayer);
         v += RuleSeparation() * CombineWeight(weightSeparationBase, weightSeparationPlayerNear, distanceToPlayer);
-        v += RuleAttractedByPlayer() * weightPlayerAttraction;
+        if(PlayerEnergy.Instance.HasEnergy)
+            v += RuleAttractedByPlayer() * weightPlayerAttraction;
         v += RuleAttractedByLight() * weightLightAttraction;
 
         //Debug.DrawRay(transform.position, RuleCohesion() * CombineWeight(weightCohesionBase, weightCohesionPlayerNear, distanceToPlayer), Color.green);
@@ -222,9 +228,13 @@ public class InsectBoid : MonoBehaviour
     {
         float distanceToPlayer = (transform.position - player.position).magnitude;
 
-        float currentMaxVelocity = Mathf.Lerp(DifficultyManager.MoskitoBaseMoveSpeed, maxVelocityPlayerNear, 1 - (distanceToPlayer / playerProximityZoneRadius));
-        targetVelocity = Vector3.ClampMagnitude(targetVelocity, currentMaxVelocity);
+        float distanceToPlayer01 = 1 - (distanceToPlayer / playerProximityZoneRadius);
+        if (PlayerEnergy.Instance != null && !PlayerEnergy.Instance.HasEnergy)
+            distanceToPlayer01 = 0;
+
+        float currentMaxVelocity = Mathf.Lerp(DifficultyManager.MoskitoBaseMoveSpeed, maxVelocityPlayerNear, distanceToPlayer01);
         targetVelocity.z = 0;
+        targetVelocity = Vector3.ClampMagnitude(targetVelocity, currentMaxVelocity);
         Debug.DrawRay(transform.position, targetVelocity, Color.blue);
 
         velocity = Vector3.SmoothDamp(velocity, targetVelocity, ref refPosition, velocitySmooth);

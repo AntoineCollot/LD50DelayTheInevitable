@@ -841,13 +841,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca4ea7f273883794086ddf9447f9c38b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerProximityZoneRadius: 5
+  playerProximityZoneRadius: 4
   flockingMaxDistance: 2
   maxVelocityPlayerNear: 7
   velocitySmooth: 0.2
-  weightCohesionBase: 0.5
-  weightCohesionPlayerNear: 5
-  weightSeparationBase: 4
+  weightCohesionBase: 1
+  weightCohesionPlayerNear: 3
+  weightSeparationBase: 3
   weightSeparationPlayerNear: 0
   weightLightAttraction: 3
   weightPlayerAttraction: 6

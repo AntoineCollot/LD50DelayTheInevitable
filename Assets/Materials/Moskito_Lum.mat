@@ -37,7 +37,8 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Floats:
     - Vector1_4171c257b616487e9f764321c17cd822: 0
-    - _EmissionDirection: 0.304
+    - _EmissionDirection: 0.429
+    - _On: 1
     m_Colors:
     - _EmissionColor: {r: 29.508846, g: 12.050733, b: 0, a: 0}
   m_BuildTextureStacks: []

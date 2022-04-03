@@ -28,6 +28,7 @@ public class WingsAnimation : MonoBehaviour
             renderer.sprite = sprites[currentId];
 
             yield return null;
+            yield return null;
         }
     }
 }

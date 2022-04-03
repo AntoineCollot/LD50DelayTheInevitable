@@ -9,8 +9,12 @@ public class MantisSpawner : MonoBehaviour
 
     public Transform[] spawns;
 
-    // Start is called before the first frame update
-    void Start()
+    private void Start()
+    {
+        GameManager.Instance.onGameStart.AddListener(OnGameStart);
+    }
+
+    void OnGameStart()
     {
         StartCoroutine(SpawnMantisLoop());
     }

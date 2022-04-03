@@ -20,6 +20,11 @@ public class PlayArea : MonoBehaviour
         return pos;
     }
 
+    public static bool IsInPlayArea(float hPos)
+    {
+        return hPos > Instance.playRect.xMin && hPos < Instance.playRect.xMax;
+    }
+
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.green;

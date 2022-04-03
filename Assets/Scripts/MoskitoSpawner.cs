@@ -8,7 +8,12 @@ public class MoskitoSpawner : MonoBehaviour
     public GameObject moskitoPrefab;
     public float firstMoskitoSpawn = 40;
 
-    void Start()
+    private void Start()
+    {
+        GameManager.Instance.onGameStart.AddListener(OnGameStart);
+    }
+
+    void OnGameStart()
     {
         StartCoroutine(SpawnMoskitoLoop());
     }

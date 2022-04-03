@@ -9,6 +9,9 @@ ModelImporter:
   - first:
       74: -3100369314251171874
     second: Idle
+  - first:
+      74: 1963171540357596104
+    second: Bite
   externalObjects: {}
   materials:
     materialImportMode: 2

@@ -34,8 +34,8 @@ public class DisplayScore : MonoBehaviour
         float t = 0;
         while(t<1)
         {
-            t += Time.deltaTime / 1f;
-            screenMat.InstancedMat.SetFloat("_Intensity", baseIntensity + Mathf.PingPong(t*6, 3f));
+            t += Time.deltaTime / 0.5f;
+            screenMat.InstancedMat.SetFloat("_Intensity", baseIntensity + Mathf.PingPong(t*8, 4f));
 
             yield return null;
         }

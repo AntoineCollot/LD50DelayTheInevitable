@@ -1,17 +1,23 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class BiteHuman : MonoBehaviour
 {
     Animator anim;
     FollowCursor controls;
-    public float animTime = 2;
+    public float bitePreparationTime = 0.3f;
+    public float biteCooldownTime = 1;
     bool isBiting = false;
+
+    public UnityEvent onSuccessfullBite = new UnityEvent();
 
     [Header("Target")]
     public Transform biteTarget;
+    public Transform biteOrigin;
     public float biteArea;
+    public Animator humanAnim;
 
     // Start is called before the first frame update
     void Start()
@@ -37,12 +43,20 @@ public class BiteHuman : MonoBehaviour
         anim.SetTrigger("Bite");
         controls.enabled = false;
         isBiting = true;
+        SoundManager.PlaySound(1);
 
-        yield return new WaitForSeconds(animTime * 0.5f);
+        yield return new WaitForSeconds(bitePreparationTime);
 
+        Vector2 toTarget = biteTarget.position - biteOrigin.position;
         //Check if successfull
-        GameManager.Instance.AddScore(1);
-        yield return new WaitForSeconds(animTime * 0.5f);
+        if(toTarget.magnitude < biteArea)
+        {
+            GameManager.Instance.AddScore(1);
+            humanAnim.SetTrigger("Bite");
+            onSuccessfullBite.Invoke();
+        }
+
+        yield return new WaitForSeconds(biteCooldownTime);
 
         isBiting = false;
         controls.enabled = true;

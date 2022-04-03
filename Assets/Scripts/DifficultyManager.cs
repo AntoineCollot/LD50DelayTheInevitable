@@ -12,14 +12,14 @@ public static class DifficultyManager
     public static float MantisAttackPreparation { get => Mathf.Lerp(MantisAttackPreparationEZ, MantisAttackPreparationHard, Difficulty01); }
 
     const float MoskitoBaseMoveSpeedEZ = 0.2f;
-    const float MoskitoBaseMoveSpeedHard = 0.5f;
+    const float MoskitoBaseMoveSpeedHard = 0.4f;
     public static float MoskitoBaseMoveSpeed { get => Mathf.Lerp(MoskitoBaseMoveSpeedEZ, MoskitoBaseMoveSpeedHard, Difficulty01); }
 
-    const float MantisSpawnIntervalEZ = 20f;
-    const float MantisSpawnIntervalHard = 7f;
+    const float MantisSpawnIntervalEZ = 25f;
+    const float MantisSpawnIntervalHard = 15f;
     public static float MantisSpawnInterval { get => Mathf.Lerp(MantisSpawnIntervalEZ, MantisSpawnIntervalHard, Difficulty01); }
 
-    const float MoskitoSpawnIntervalEZ = 20f;
-    const float MoskitoSpawnIntervalHard = 7f;
+    const float MoskitoSpawnIntervalEZ = 25f;
+    const float MoskitoSpawnIntervalHard = 15f;
     public static float MoskitoSpawnInterval { get => Mathf.Lerp(MoskitoSpawnIntervalEZ, MoskitoSpawnIntervalHard, Difficulty01); }
 }
