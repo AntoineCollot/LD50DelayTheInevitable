@@ -18,6 +18,9 @@ public class FollowCursor : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (GameManager.GameIsOver)
+            return;
+
         Vector3 screenPosition = Input.mousePosition;
         screenPosition.z = Mathf.Abs(cam.transform.position.z);
         transform.position = Vector3.SmoothDamp(transform.position, cam.ScreenToWorldPoint(screenPosition), ref refPosition, smooth);

@@ -34,6 +34,7 @@ Material:
     m_Floats:
     - Vector1_0d4838a8d1ed481f8b4bd8541c1ab73c: 0.67
     - _Metallic: 1
+    - _On: 1
     - _Smoothness: 1
     m_Colors:
     - _EmissionColor: {r: 97.811325, g: 176.98076, b: 256, a: 0}

@@ -14,7 +14,6 @@ public class Mantis : MonoBehaviour
     [Header("Attack")]
     public ParticleSystem attackParticles;
     public float triggerAttackDistance = 2;
-    float attackPreparationTime = 2;
     InsectBoid target;
     public enum State { MovingToTarget, Spooked, Attacking }
     State state;
@@ -22,7 +21,7 @@ public class Mantis : MonoBehaviour
     [Header("Player")]
     public float flightZoneRadius;
     public float spookedMoveSpeed =2;
-    float spookStateDuration = 5;
+    float spookStateDuration = 10;
     float spookTime;
 
     [Header("Direction")]
@@ -61,7 +60,7 @@ public class Mantis : MonoBehaviour
         float targetMovement = 0;
 
         //Remove spooked state
-        if (Time.time > spookTime + spookStateDuration)
+        if (state==State.Spooked && Time.time > spookTime + spookStateDuration)
             state = State.MovingToTarget;
 
         //Find the state
@@ -119,7 +118,7 @@ public class Mantis : MonoBehaviour
 
         while(t<1)
         {
-            t += Time.deltaTime / attackPreparationTime;
+            t += Time.deltaTime / DifficultyManager.MantisAttackPreparation;
 
             if (state != State.Attacking)
                 yield break;
@@ -161,7 +160,7 @@ public class Mantis : MonoBehaviour
     {
         if (InsectBoid.insects.Count == 0)
             return null;
-        int randomTarget = Random.Range(0, InsectBoid.insects.Count - 1);
+        int randomTarget = Random.Range(0, InsectBoid.insects.Count);
         return InsectBoid.insects[randomTarget];
     }
 

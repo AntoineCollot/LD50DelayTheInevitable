@@ -8,7 +8,6 @@ public class InsectBoid : MonoBehaviour
     public float playerProximityZoneRadius = 5;
     public float flockingMaxDistance = 2;
 
-    public float maxVelocityBase = 0.2f;
     public float maxVelocityPlayerNear = 3.5f;
     Vector3 refPosition;
     public float velocitySmooth = 0.2f;
@@ -58,7 +57,7 @@ public class InsectBoid : MonoBehaviour
 
     private void OnDestroy()
     {
-        if(Application.isPlaying)
+        if(Application.isPlaying && gameObject.scene.isLoaded)
             Destroy(Instantiate(bloodFX, transform.position, Quaternion.identity, null),2);
     }
 
@@ -198,6 +197,7 @@ public class InsectBoid : MonoBehaviour
         targetVelocity = ApplyRules();
 
         Turn();
+        transform.position = PlayArea.ClampToPlayArea(transform.position);
     }
 
     void Turn()
@@ -222,7 +222,7 @@ public class InsectBoid : MonoBehaviour
     {
         float distanceToPlayer = (transform.position - player.position).magnitude;
 
-        float currentMaxVelocity = Mathf.Lerp(maxVelocityBase, maxVelocityPlayerNear, 1 - (distanceToPlayer / playerProximityZoneRadius));
+        float currentMaxVelocity = Mathf.Lerp(DifficultyManager.MoskitoBaseMoveSpeed, maxVelocityPlayerNear, 1 - (distanceToPlayer / playerProximityZoneRadius));
         targetVelocity = Vector3.ClampMagnitude(targetVelocity, currentMaxVelocity);
         targetVelocity.z = 0;
         Debug.DrawRay(transform.position, targetVelocity, Color.blue);

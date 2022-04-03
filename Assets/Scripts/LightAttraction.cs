@@ -11,7 +11,6 @@ public class LightAttraction : MonoBehaviour
 
     public Vector3 AttractionPosition { get => transform.TransformPoint(offset); }
 
-    // Start is called before the first frame update
     void OnEnable()
     {
         lights.Add(this);
@@ -26,7 +25,7 @@ public class LightAttraction : MonoBehaviour
     {
         float minDist = Mathf.Infinity;
         LightAttraction closestLight = null;
-        foreach(LightAttraction light in lights)
+        foreach (LightAttraction light in lights)
         {
             float dist = Vector3.Distance(pos, light.AttractionPosition) / light.range;
             if (dist < minDist)
