@@ -12,7 +12,9 @@ public class Mantis : MonoBehaviour
     Vector2 spawnPosition;
 
     [Header("Attack")]
+    public ParticleSystem attackParticles;
     public float triggerAttackDistance = 2;
+    float attackPreparationTime = 2;
     InsectBoid target;
     public enum State { MovingToTarget, Spooked, Attacking }
     State state;
@@ -22,6 +24,11 @@ public class Mantis : MonoBehaviour
     public float spookedMoveSpeed =2;
     float spookStateDuration = 5;
     float spookTime;
+
+    [Header("Direction")]
+    Direction dir;
+    float lastTurnTime;
+    const float TURN_INTERVAL = 1;
 
     [Header("Animations")]
     Animator anim;
@@ -42,6 +49,11 @@ public class Mantis : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (target == null)
+        {
+            target = SelectTarget();
+            return;
+        }
         Vector2 toTarget = target.transform.position - transform.position;
         Vector3 playerToMantis = transform.position - player.position;
         float direction = Mathf.Sign(toTarget.x);
@@ -77,8 +89,8 @@ public class Mantis : MonoBehaviour
 
         movement = Mathf.SmoothDamp(movement, targetMovement, ref refMovement, movementSmooth);
         transform.Translate(Vector3.right * movement * Time.deltaTime);
-        anim.SetFloat("Movement", movement);
-
+        anim.SetFloat("Movement", Mathf.Abs(movement));
+        Turn();
     }
 
     public void Spook()
@@ -97,10 +109,58 @@ public class Mantis : MonoBehaviour
             return;
 
         state = State.Attacking;
+
+        StartCoroutine(AttackAnim());
+    }
+
+    IEnumerator AttackAnim()
+    {
+        float t = 0;
+
+        while(t<1)
+        {
+            t += Time.deltaTime / attackPreparationTime;
+
+            if (state != State.Attacking)
+                yield break;
+
+            yield return null;
+        }
+
+        anim.SetTrigger("Attack");
+        yield return new WaitForSeconds(0.05f);
+        ParticleSystem particles = Instantiate(attackParticles, null);
+        particles.transform.position = transform.position;
+        particles.transform.LookAt(target.transform.position);
+        particles.Play();
+        Destroy(particles.gameObject, 1.5f);
+        yield return new WaitForSeconds(0.05f);
+        Destroy(target.gameObject);
+        Destroy(gameObject);
+    }
+
+    void Turn()
+    {
+        if (Time.time < lastTurnTime + TURN_INTERVAL)
+            return;
+        if (movement > 0 && dir != Direction.Right)
+        {
+            transform.localScale = new Vector3(-1, 1, 1);
+            dir = Direction.Right;
+            lastTurnTime = Time.time;
+        }
+        else if (movement < 0 && dir != Direction.Left)
+        {
+            transform.localScale = Vector3.one;
+            dir = Direction.Left;
+            lastTurnTime = Time.time;
+        }
     }
 
     InsectBoid SelectTarget()
     {
+        if (InsectBoid.insects.Count == 0)
+            return null;
         int randomTarget = Random.Range(0, InsectBoid.insects.Count - 1);
         return InsectBoid.insects[randomTarget];
     }

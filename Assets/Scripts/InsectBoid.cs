@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum Direction { Left, Right }
 public class InsectBoid : MonoBehaviour
 {
     public float playerProximityZoneRadius = 5;
@@ -17,7 +18,6 @@ public class InsectBoid : MonoBehaviour
 
     [Header("Direction")]
     Direction dir;
-    public enum Direction { Left,Right}
     float lastTurnTime;
     const float TURN_INTERVAL = 1;
 
@@ -37,6 +37,10 @@ public class InsectBoid : MonoBehaviour
     Transform player;
     public static List<InsectBoid> insects = new List<InsectBoid>();
 
+    [Header("FX")]
+    public GameObject fireFX;
+    public GameObject bloodFX;
+
     void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player").transform;
@@ -50,6 +54,12 @@ public class InsectBoid : MonoBehaviour
     private void OnDisable()
     {
         insects.Remove(this);
+    }
+
+    private void OnDestroy()
+    {
+        if(Application.isPlaying)
+            Destroy(Instantiate(bloodFX, transform.position, Quaternion.identity, null),2);
     }
 
     float P(float x)
@@ -109,7 +119,7 @@ public class InsectBoid : MonoBehaviour
         }
 
         //Separate with player too
-        if (Vector3.Distance(player.position, transform.position) < flockingMaxDistance && Vector3.Distance(player.position, transform.position)>0.001f)
+        if (Vector3.Distance(player.position, transform.position) < flockingMaxDistance && Vector3.Distance(player.position, transform.position) > 0.001f)
         {
             Vector3 playerToInsect = transform.position - player.transform.position;
             separationVector += (playerToInsect / playerToInsect.magnitude) * Inv(playerToInsect.magnitude, 1);
@@ -200,7 +210,7 @@ public class InsectBoid : MonoBehaviour
             dir = Direction.Right;
             lastTurnTime = Time.time;
         }
-        else if(targetVelocity.x < 0 && dir != Direction.Left)
+        else if (targetVelocity.x < 0 && dir != Direction.Left)
         {
             transform.localScale = Vector3.one;
             dir = Direction.Left;
@@ -222,6 +232,12 @@ public class InsectBoid : MonoBehaviour
 
         if (velocity.magnitude > 0)
             transform.Translate(velocity * Time.deltaTime, Space.World);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        Destroy(Instantiate(fireFX, transform.position, Quaternion.identity, null),2);
+        Destroy(gameObject);
     }
 
 #if UNITY_EDITOR

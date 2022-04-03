@@ -804,6 +804,8 @@ GameObject:
   m_Component:
   - component: {fileID: 4149463454683045204}
   - component: {fileID: 4149463454683045226}
+  - component: {fileID: 5067467526675020257}
+  - component: {fileID: 472431471289860015}
   m_Layer: 0
   m_Name: Moskito
   m_TagString: Untagged
@@ -849,6 +851,37 @@ MonoBehaviour:
   weightSeparationPlayerNear: 0
   weightLightAttraction: 3
   weightPlayerAttraction: 6
+  fireFX: {fileID: 1472481316546113688, guid: f8738ab99908bff4db9c54c47ea26ab4, type: 3}
+  bloodFX: {fileID: 1296928651656911753, guid: 816f0834e22faa44a99e3680f067a914, type: 3}
+--- !u!135 &5067467526675020257
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4149463454683045227}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.25
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!54 &472431471289860015
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4149463454683045227}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &4149463454748085556
 GameObject:
   m_ObjectHideFlags: 0
