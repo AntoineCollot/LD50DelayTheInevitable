@@ -53,6 +53,8 @@ public class Mantis : MonoBehaviour
         player = GameObject.FindGameObjectWithTag("Player").transform;
         anim = GetComponent<Animator>();
         spawnPosition = transform.position;
+
+        spookStateDuration = Random.Range(8f, 13f);
     }
 
     // Update is called once per frame

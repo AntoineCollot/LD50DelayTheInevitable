@@ -187,7 +187,7 @@ public class InsectBoid : MonoBehaviour
         Vector3 v = Vector3.zero;
         v += RuleCohesion() * CombineWeight(weightCohesionBase, weightCohesionPlayerNear, distanceToPlayer);
         v += RuleSeparation() * CombineWeight(weightSeparationBase, weightSeparationPlayerNear, distanceToPlayer);
-        if(PlayerEnergy.Instance.HasEnergy)
+        if(PlayerEnergy.Instance.HasEnergy && !BiteHuman.Instance.isBiting && distanceToPlayer<playerProximityZoneRadius)
             v += RuleAttractedByPlayer() * weightPlayerAttraction;
         v += RuleAttractedByLight() * weightLightAttraction;
 

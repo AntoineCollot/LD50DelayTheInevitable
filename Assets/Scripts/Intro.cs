@@ -19,6 +19,16 @@ public class Intro : MonoBehaviour
         Invoke("PlayIntroDelayed", 1.5f);
     }
 
+    private void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.Space))
+        {
+            CancelInvoke();
+            director.Stop();
+            OnIntroFinished();
+        }
+    }
+
     void PlayIntroDelayed()
     {
         director.Play();

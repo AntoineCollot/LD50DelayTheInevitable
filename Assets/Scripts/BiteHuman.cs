@@ -9,7 +9,7 @@ public class BiteHuman : MonoBehaviour
     FollowCursor controls;
     public float bitePreparationTime = 0.3f;
     public float biteCooldownTime = 1;
-    bool isBiting = false;
+    public bool isBiting { get; private set; }
 
     public UnityEvent onSuccessfullBite = new UnityEvent();
 
@@ -19,9 +19,17 @@ public class BiteHuman : MonoBehaviour
     public float biteArea;
     public Animator humanAnim;
 
+    public static BiteHuman Instance;
+
+    private void Awake()
+    {
+        Instance = this;
+    }
+
     // Start is called before the first frame update
     void Start()
     {
+        isBiting = false;
         anim = GetComponent<Animator>();
         controls = GetComponent<FollowCursor>();
     }
